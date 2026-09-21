@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using School.AppContext;
 using School.Models;
 using SchoolProjcet.DTOs.ClassRoomDTOs;
+using SchoolProjcet.Mapper.ClassRoomMapping;
 
 namespace SchoolProjcet.Controllers
 {
@@ -11,26 +13,29 @@ namespace SchoolProjcet.Controllers
     public class ClassRoomController : ControllerBase
     {
         private readonly AppDbContext _context;
+        private readonly IMapper _mapper;
         public ClassRoomController()
         {
             _context = new AppDbContext();
+            var gsf = new MapperConfiguration(e => e.AddProfile<ClassRoomProfail>());
+            _mapper=gsf.CreateMapper();
         }
         [HttpGet]
         public IActionResult GetAllClassRoom()
         {
             var c = _context.ClassRooms.ToList();
-            List<ClassRoomDTO> list = new List<ClassRoomDTO>();
-            foreach (var room in c)
-            {
-                var d = new ClassRoomDTO()
-                {
-                    Capacity = room.Capacity,
-                    GradeLevel = room.GradeLevel,
-                    Id = room.Id,
-                    Name = room.Name,
-                };
-                list.Add(d);
-            }
+            List<ClassRoomDTO> list = _mapper.Map<List<ClassRoomDTO>>(c);
+            //foreach (var room in c)
+            //{
+            //    var d = new ClassRoomDTO()
+            //    {
+            //        Capacity = room.Capacity,
+            //        GradeLevel = room.GradeLevel,
+            //        Id = room.Id,
+            //        Name = room.Name,
+            //    };
+            //    list.Add(d);
+            //}
             return Ok(list);
         }
 
@@ -42,14 +47,15 @@ namespace SchoolProjcet.Controllers
             {
                 return NotFound();
             }
-            var d = new ClassRoomDTO()
-                {
-                    Capacity = n.Capacity,
-                    GradeLevel = n.GradeLevel,
-                    Id = n.Id,
-                    Name = n.Name,
+            //var d = new ClassRoomDTO()
+            //    {
+            //        Capacity = n.Capacity,
+            //        GradeLevel = n.GradeLevel,
+            //        Id = n.Id,
+            //        Name = n.Name,
 
-               };
+            //   };
+            var d=_mapper.Map<ClassRoomDTO>(n);
             return Ok(d);
             
         }
@@ -74,12 +80,13 @@ namespace SchoolProjcet.Controllers
             {
                 return BadRequest("NortValide Data");
             }
-            var d = new ClassRoom()
-            {
-                Capacity = classRoomDTO.Capacity,
-                GradeLevel = classRoomDTO.GradeLevel,
-                Name = classRoomDTO.Name,
-            };
+            //var d = new ClassRoom()
+            //{
+            //    Capacity = classRoomDTO.Capacity,
+            //    GradeLevel = classRoomDTO.GradeLevel,
+            //    Name = classRoomDTO.Name,
+            //};
+            var d=_mapper.Map<ClassRoom>(classRoomDTO);
             _context.ClassRooms.Add(d);
             _context.SaveChanges();
             return CreatedAtAction(nameof(GetClassRoomById), new { id = d.Id }, classRoomDTO);
@@ -98,9 +105,10 @@ namespace SchoolProjcet.Controllers
             {
                 return NotFound();
             }
-           x.Name = classRoomDTO.Name;
-            x.Capacity = classRoomDTO.Capacity;
-            x.GradeLevel = classRoomDTO.GradeLevel;
+            //x.Name = classRoomDTO.Name;
+            // x.Capacity = classRoomDTO.Capacity;
+            // x.GradeLevel = classRoomDTO.GradeLevel;
+            _mapper.Map(classRoomDTO, x);
             _context.SaveChanges();
             return Ok(classRoomDTO);
         }
