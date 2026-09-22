@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+﻿ using AutoMapper;
 using School.Models;
 using SchoolProjcet.DTOs.TeatcherDTOs;
 namespace SchoolProjcet.Mapper.TeatcherMapping
@@ -8,8 +8,8 @@ namespace SchoolProjcet.Mapper.TeatcherMapping
         public TeatcherProfail() { 
         
             CreateMap<Teacher,TeatcherDTO>().ForMember(e=>e.FullName,m=>m.MapFrom(s=>s.FirstName+" "+s.LastName)).ReverseMap();
-            CreateMap<Teacher, CreateTeatcherDTO>().ForMember(e => e.FullName, m => m.MapFrom(s => s.FirstName + " " + s.LastName)).ReverseMap();
-            CreateMap<Teacher, UpdateTeatcherDTO>().ForMember(e => e.FullName, m => m.MapFrom(s => s.FirstName + " " + s.LastName)).ReverseMap();
+            CreateMap<Teacher, CreateTeatcherDTO>().ReverseMap();
+            CreateMap<Teacher, UpdateTeatcherDTO>().ReverseMap();
 
         
         }

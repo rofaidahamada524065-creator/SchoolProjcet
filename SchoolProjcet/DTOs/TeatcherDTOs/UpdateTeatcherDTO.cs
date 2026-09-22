@@ -2,10 +2,10 @@
 {
     public class UpdateTeatcherDTO
     {
-        public string FullName { get; set; }
-     
-        public int DepdartmentId { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public int DepartmentId { get; set; }
         public string Email { get; set; }
-       
+
     }
 }
