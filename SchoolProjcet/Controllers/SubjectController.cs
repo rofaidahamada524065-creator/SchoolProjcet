@@ -84,9 +84,10 @@ namespace SchoolProjcet.Controllers
             //x.Name = updateSubjectsDTO.Name;
             //x.MaxGrade = updateSubjectsDTO.MaxGrade;
             //x.TeacherId = updateSubjectsDTO.TeatcherID;
-            _mapper.Map(updateSubjectsDTO, x);  
+           var s = _mapper.Map(updateSubjectsDTO, x); 
+            _context.Subjects.Update(s);
             _context.SaveChanges();
-            return Ok(updateSubjectsDTO);
+            return Ok();
             
         }
 
@@ -94,7 +95,8 @@ namespace SchoolProjcet.Controllers
         public IActionResult GetSubject(int id)
         {
             var subject = _context.Subjects.Include(e=>e.Teacher).ToList();
-            var tec=_context.Teachers.ToList();
+            var tec=_context.Subjects.Find(id);
+            
            
             if (subject == null)
             {
@@ -108,7 +110,7 @@ namespace SchoolProjcet.Controllers
             //    MaxGrade = subject.MaxGrade,
             //    NameTeatcher = subject.Teacher.FirstName + " " + subject.Teacher.LastName
             //};
-            var x=_mapper.Map<SubjectDTO>(subject);
+            var x=_mapper.Map<SubjectDTO>(tec);
 
             return Ok(x);
         }

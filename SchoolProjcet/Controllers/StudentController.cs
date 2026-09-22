@@ -16,9 +16,9 @@ namespace SchoolProjcet.Controllers
         private readonly AppDbContext _context;
         private readonly IMapper _mapper;
 
-        public StudentController(AppDbContext context)
+        public StudentController()
         {
-            _context = context;
+            _context =new AppDbContext();
             var con = new MapperConfiguration(e => e.AddProfile<StudentProfail>());
             _mapper = con.CreateMapper();
         }
@@ -40,13 +40,13 @@ namespace SchoolProjcet.Controllers
             // };
             //    result.Add(studentDTO);
             //}
-            return Ok(students);
+            return Ok(result);
         }
 
         [HttpPost]
-        public IActionResult CreateStudent(CreateStudenDTO student)
+        public IActionResult CreateStudent(CreateStudenDTO studentDTo)
         {
-            if(student == null)
+            if(studentDTo == null)
             {
                 return BadRequest("Student data is null.");
             }
@@ -58,11 +58,11 @@ namespace SchoolProjcet.Controllers
             //    PhoneNumber = student.PhoneNumber,
             //    ClassRoomId = student.ClassRoomId
             //};
-            var x=_mapper.Map<Student>(student);
+            var x=_mapper.Map<Student>(studentDTo);
            
             _context.Students.Add(x);
             _context.SaveChanges();
-            return Ok(student);
+            return Ok(studentDTo);
         }
 
         [HttpPut]
@@ -73,8 +73,7 @@ namespace SchoolProjcet.Controllers
             {
                 return NotFound();
             }
-            var s=_mapper.Map<Student>(student);
-            _context.Students.Update(s);
+            _mapper.Map(student, x);
             _context.SaveChanges();
 
             return Ok();
@@ -84,13 +83,13 @@ namespace SchoolProjcet.Controllers
         [HttpGet("{id}")]
         public IActionResult GetStudent(int id)
         {
-            var student = _context.Students.Include(e=>e.ClassRoom).ToList();
+            var student = _context.Students.Include(e=>e.ClassRoom).FirstOrDefault(e => e.Id == id);
             if (student == null)
             {
                 return NotFound();
             }
             var x = _mapper.Map<StudentDTO>(student);
-            return Ok(student);
+            return Ok(x);
         }
         [HttpDelete]
         public IActionResult DeleteStudent(int id)

@@ -7,9 +7,9 @@ namespace SchoolProjcet.Mapper.TeatcherMapping
     {
         public TeatcherProfail() { 
         
-            CreateMap<Teacher,TeatcherDTO>().ReverseMap();
-            CreateMap<CreateTeatcherDTO,Teacher>().ReverseMap();
-            CreateMap<UpdateTeatcherDTO,Teacher>().ReverseMap();
+            CreateMap<Teacher,TeatcherDTO>().ForMember(e=>e.FullName,m=>m.MapFrom(s=>s.FirstName+" "+s.LastName)).ReverseMap();
+            CreateMap<Teacher, CreateTeatcherDTO>().ForMember(e => e.FullName, m => m.MapFrom(s => s.FirstName + " " + s.LastName)).ReverseMap();
+            CreateMap<Teacher, UpdateTeatcherDTO>().ForMember(e => e.FullName, m => m.MapFrom(s => s.FirstName + " " + s.LastName)).ReverseMap();
 
         
         }

@@ -25,7 +25,10 @@ namespace SchoolProjcet.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            var x = _context.Enrollments.Include(e => e.SubjectId).Include(e => e.StudentId).ToList();
+            var x = _context.Enrollments
+              .Include(e => e.Subject)
+             .Include(e => e.Student)
+             .ToList();
             List<EnrollmentDTO> list = _mapper.Map<List<EnrollmentDTO>>(x);
             return Ok(list);
         }
@@ -45,15 +48,15 @@ namespace SchoolProjcet.Controllers
 
 
         [HttpPut]
-        public IActionResult Update(EnrollmentDTO enrollmentDTO, int id)
+        public IActionResult Update(UpdateEnrollment enrollmentDTO, int id)
         {
             var x = _context.Enrollments.Find(id);
             if (x == null)
             {
                 return NotFound();
             }
-            var s=_mapper.Map<Enrollment>(enrollmentDTO);
-            _context.Enrollments.Update(s);
+           _mapper.Map<Enrollment>(enrollmentDTO);
+            
             _context.SaveChanges();
             return Ok();
 
