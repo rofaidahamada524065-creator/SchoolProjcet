@@ -74,5 +74,23 @@ namespace SchoolProjcet.Controllers
 
         }
 
+        [HttpGet("Enrollment")]
+        public IActionResult GetEnrollment(int id)
+        {
+            var x = _context.Enrollments.Where(e => e.Student.ClassRoomId == id)
+                .OrderByDescending(e => e.Grade).Select(e => new EnrollmentDTO
+                {
+                    Id = e.Id,
+
+                    SubjectNamme = e.Subject.Name,
+                    Grade = e.Grade,
+                    StudentName = e.Student.FirstName + " " + e.Student.LastName,
+
+                })
+                .ToList();
+            return Ok(x);
+        }
+        
     }
 }
+

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Metadata;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using School.AppContext;
@@ -102,5 +103,81 @@ namespace SchoolProjcet.Controllers
 
 
         }
+
+        [HttpGet("OrderBy")]
+        public IActionResult OrderBy()
+        {
+            var x = _context.Students
+                .OrderBy(e => e.LastName).Select(e=>new
+                {
+                    e.FirstName,
+                    e.LastName,
+                    e.Email,
+                    e.DateOfBirth
+                })
+                .ToList();
+
+            return Ok(x);
+        }
+
+        [HttpGet("filter")]
+        public IActionResult AllStudent(int classRoomId, decimal minGrade)
+        {
+            var students = _context.Students
+                .Where(s => s.ClassRoomId == classRoomId)
+                .Where(s => s.Enrollments.Any(e => e.Grade >= minGrade))
+                .ToList();
+
+            return Ok(students);
+        }
+
+        [HttpGet("SpecialStudents")]
+        public IActionResult gitstudent(int classRoom)
+        {
+            var x = _context.Students.OrderBy(e => e.Id).Where(e => e.ClassRoomId == classRoom).Select(e => new
+            {
+                e.FirstName,
+                e.LastName,
+               
+                e.PhoneNumber,
+                e.DateOfBirth
+            }).FirstOrDefault();
+            return Ok(x);
+
+        }
+
+        [HttpGet("first student")]
+        public IActionResult GetFrist(int classRoom)
+        {
+            
+            var x = _context.Students.Where(e => e.ClassRoomId == classRoom).OrderBy(e=>e.Id)
+                .FirstOrDefault();
+            if(x== null)
+            {
+                return NotFound();
+            }
+            
+            return Ok(x);
+        }
+        [HttpGet("Maching Email")]
+        public IActionResult MachingEmail(string email)
+        {
+            var x = _context.Students.Where(e => e.Email == email).FirstOrDefault();
+            if (x == null)
+            {
+                return NotFound();
+            }
+            return Ok(x);
+        }
+
+
+        [HttpGet("UaniceStudetwhithEmail")]
+        public IActionResult UaniceStudet(string Email)
+        {
+            var x = _context.Students.Where(e => e.Email == Email).Distinct();
+            return Ok(x);
+        }
+
+
     }
 }
